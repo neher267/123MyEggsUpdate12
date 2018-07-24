@@ -4,7 +4,9 @@
 <!-- start content -->
 <div class="w_content">
     <div class="women">
-        <a href="#"><h4>gifts - <span>{{$gifts->count()}} items</span> </h4></a>
+        @if(!empty($claims)) 
+        <a href="#"><h4><span>@lang('customer.claim')</span> </h4></a>
+        @endif
         <ul class="w_nav">
             <li>Sort : </li>
             <li><a class="active" href="#">popular</a></li> |
@@ -17,10 +19,7 @@
     </div>
 
     <!-- grids_of_4 -->
-    @if(!empty($claims))
-    <hr>
-    <h2>YOU CAN CLAIM THIS GIFTS</h2>
-    <hr>
+    @if(!empty($claims))    
     @foreach($claims as $gift_chunk)        
     <div class="grids_of_4">
         @foreach($gift_chunk as $gift)

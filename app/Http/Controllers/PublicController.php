@@ -19,6 +19,13 @@ class PublicController extends Controller
         return view('frontend.index', compact('categories', 'count'));
     }
 
+    public function language_change($locale)
+    {
+        \Session::put('locale', $locale);
+        return redirect()->back();
+    }
+
+
     public function gifts()
     {
         $user = request()->user();

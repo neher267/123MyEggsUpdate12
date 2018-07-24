@@ -62,7 +62,7 @@
 										{{ csrf_field() }}
 										{{ method_field('DELETE') }}
 
-										<button type="submit" class="btn btn-danger">Delete</button>
+										<button type="submit" class="btn btn-danger" onclick="return alertUser('delete it?')">Delete</button>
 									</form>
 
 									<a href="{{route('product.package.images.index',[$product, $package])}}" class="btn btn-default">Images</a>									

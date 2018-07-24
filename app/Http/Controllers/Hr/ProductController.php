@@ -19,7 +19,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::where('for_sale', true)->orderBy('category_id', 'asc')->get();
+        $products = Product::where('for_sale', true)->latest()->get();
         $title = "All Products";
         return view('backend.hr.product.index', compact('products', 'title'));
     }
@@ -44,10 +44,13 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $imageName = time().'.'.$request->src->getClientOriginalExtension();
-        
+        // both side space remove and more than one space to one space
+        $name = trim(preg_replace('/\s\s+/', ' ', $request->name));
+
         $product = new Product;
-        $product->name = $request->name;
-        $product->slug = strtolower(str_replace(' ', '-', $request->name));
+        $product->name = $name;
+        $product->slug = strtolower(str_replace(' ', '-', $name));
+
         $product->category()->associate($request->category_id);
         $product->unit = $request->unit;
         $product->for_sale = true;
@@ -94,10 +97,9 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Product $product)
     {
-        $product = Product::find($id);
-        $product->name = $request->name;
+        $product->name = trim(preg_replace('/\s\s+/', ' ', $request->name));
         $product->category()->associate($request->category_id);
         $product->unit = $request->unit;
         $product->for_sale = true;
@@ -112,8 +114,15 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Product $product)
     {
-        
+        $product->images()->each(function ($item, $key) {
+            unlink($item->src);
+            $item->delete();
+        });
+
+        $product->delete();
+
+        return back()->withSuccess('Deleted Success!');
     }
 }

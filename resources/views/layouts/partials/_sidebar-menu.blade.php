@@ -4,9 +4,7 @@
 <div style="border-top:1px ridge rgba(255, 255, 255, 0.15)"></div>
 <div class="menu">
 	<ul id="menu" >		
-		<li><a href="{{url('/')}}"><i class="fa fa-tachometer"></i> <span>Home</span></a></li>
 		@role('admin', 'hr')
-		<li><a href="{{route('register.create')}}"><i class="fa fa-plus"></i> <span>Add User</span></a></li>		
 		<li id="menu-academico" ><a href="#"><i class="fa fa-table"></i> <span>Settings</span> <span class="fa fa-angle-right" style="float: right"></span></a>
 			<ul id="menu-academico-sub" >
 			   	<li id="menu-academico-avaliacoes" ><a href="{{route('areas.index')}}">Areas</a></li>
@@ -49,8 +47,8 @@
 		@endrole
 
 		@guest
-		<li><a href="{{url('all-gifts')}}"><i class="fa fa-gift" aria-hidden="true"></i> <span>Gifts</span></a></li>
-		<li><a href="{{url('popular-packages')}}"><i class="fa fa-fire" aria-hidden="true"></i><span>Popular</span></a></li>
+		<li><a href="{{url('all-gifts')}}"><i class="fa fa-gift" aria-hidden="true"></i> <span>@lang('customer.gifts')</span></a></li>
+		<li><a href="{{url('popular-packages')}}"><i class="fa fa-fire" aria-hidden="true"></i><span>@lang('customer.popular')</span></a></li>
 
 		@foreach($all_categories as $category)
 		<li>

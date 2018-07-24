@@ -4,7 +4,7 @@
 <!-- start content -->
 <div class="w_content">
     <div class="women">
-        <a href="#"><h4>Packages - <span>{{$count}} items</span> </h4></a>
+        <a href="#"><h4><span>{{$count}} {{trans_choice('customer.packages', $count)}}</span> </h4></a>
         <ul class="w_nav">
             <li>Sort : </li>
             <li><a class="active" href="#">popular</a></li> |

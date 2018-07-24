@@ -17,6 +17,8 @@ Route::get('{product}/packages', 'PublicController@product_packages');
 Route::get('details','PublicController@details');
 Route::get('popular-packages','PublicController@popular_packages');
 
+Route::get('language/{locale}', 'PublicController@language_change');
+
 Route::post('logout', 'Auth\SentinelLoginController@logout')->middleware('sentinel.auth');
 
 
@@ -104,6 +106,7 @@ Route::group(['namespace'=>'Hr', 'middleware'=>['sentinel.auth']], function(){
 	Route::get('products/{product}/packages/create','ProductPackageController@create')->name('product.packages.create');
 	Route::get('products/{product}/packages/{package}/edit','ProductPackageController@edit')->name('product.packages.edit');
 	Route::post('products/{product}/packages', 'ProductPackageController@store')->name('product.packages.store');
+	Route::PUT('products/{product}/packages/{package}', 'ProductPackageController@update')->name('product.packages.update');
 	Route::DELETE('products/{product}/packages/{package}', 'ProductPackageController@destroy')->name('product.packages.destroy');
 	//end product package
 	//product package image

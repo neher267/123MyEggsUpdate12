@@ -63,7 +63,7 @@ class ProductPackageController extends Controller
         $image->src = $this->path.'/'.$imageName;
         $package->images()->save($image); 
 
-        return redirect()->back()->withSuccess('Saved Successfully!');
+        return back()->withSuccess('Saved Successfully!');
     }
 
     /**
@@ -88,11 +88,10 @@ class ProductPackageController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($product_id, $package_id)
+    public function edit(Product $product, Package $package)
     {
-        $package = Package::find($package_id);
-        $title = "Edit ".$package->packageable->name. " Package";
-        return view('backend.hr.package.edit', compact('package', 'title','product_id'));
+        $title = "Edit ".$product->name. " Package";
+        return view('backend.hr.package.edit', compact('package', 'title','product'));
     }
 
     /**
@@ -102,13 +101,11 @@ class ProductPackageController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $product, Package $package)
     {
-        $package = Package::find($id);
         $package->title = $request->title;
         $package->description = $request->description;
         $package->save();
-        $product = $package->packageable->id;
         
         return redirect("products/$product/packages")->withSuccess('Update Successfully!');
     }
@@ -119,8 +116,9 @@ class ProductPackageController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id, Package $package)
     {
-        dd($id);
+        $package->delete();
+        return back()->withSuccess('Deleted Success!');
     }
 }

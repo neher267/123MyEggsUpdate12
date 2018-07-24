@@ -23,6 +23,7 @@
 								<th>Category</th>
 								<th>Unit</th>
 								<th>Branch</th>
+								<th>Packages</th>
 								<th>Actions</th>
 				            </tr>
 						</thead>
@@ -42,6 +43,7 @@
 									echo $product->branch_id == null ? 'All' : $product->branch()->first()->name;
 									?>
 								</td>
+								<td>{{$product->packages()->count()}}</td>
 								<td>
 									<a href="{{route('products.edit', $product)}}" class="btn btn-default">Edit</a>
 
@@ -51,13 +53,13 @@
 										{{ csrf_field() }}
 										{{ method_field('DELETE') }}
 
-										<button type="submit" class="btn btn-danger">Delete</button>
+										<button type="submit" class="btn btn-danger" onclick="return alertUser('delete it?')">Delete</button>
 									</form>
 
 									<a href="{{route('product.packages', $product)}}" class="btn btn-default">Packages</a>
 								</td>
-						            </tr>
-						@endforeach
+						    </tr>
+							@endforeach
 						</tbody>
 		            </table>
 				</div>

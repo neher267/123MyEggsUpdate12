@@ -2,26 +2,35 @@
 	<div class="header_top">
 		<div class="top_right">
 			<ul>
-				<li><a href="contact.html">help</a></li>|
-				<li><a href="contact.html">Contact</a></li>|
-				<li><a href="">Delivery information</a></li>
-				<li><a href="#">+8801784-255196</a></li>		
+				<li><a href="#">@lang('customer.contact')</a></li>|
+				<li><a href="#">@lang('customer.help')</a></li>|
+				<li><a href="">@lang('customer.delivery')</a></li>
+				<li><a href="#">@lang('customer.mobile')</a></li>		
 			</ul>
 		</div>
 		<!-- notifications start -->
 
 		<!-- notifications end -->
-		<div class="top_left">
+		<div class="top_left">			
+
 			<ul class="nav navbar-nav navbar-right">
 				@guest				
-				<li>					
-					<a href="{{url('login')}}"  style="color: white; font-size: 14px; display: inline;">Login</a>
-					<span style="color: white">|</span>
-					<a href="{{route('register.create')}}"  style="color: white; font-size: 14px; display: inline;">Register</a>
+				<li>	
+					@if(App::isLocale('en'))							
+					<a href="{{url('language/bn')}}"  style="color: white; font-size: 14px; display: inline;">বাংলা</a>
+					@else 
+					<a href="{{url('language/en')}}"  style="color: white; font-size: 14px; display: inline;">English</a>
+					@endif
+					<a href="{{url('login')}}"  style="color: white; font-size: 14px; display: inline;">@lang('customer.login')</a>
 				</li>
 
 				@else
-                <li class="dropdown">
+				@if(App::isLocale('en'))							
+				<li><a href="{{url('language/bn')}}"  style="color: white; font-size: 14px; display: inline;">Bangla</a></li>
+				@else 
+				<li><a href="{{url('language/en')}}{{url('language/en')}}"  style="color: white; font-size: 14px; display: inline;">English</a></li>
+				@endif
+				<li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" style="color: white; font-size: 14px">
                             {{ Sentinel::getUser()->name }} <span class="caret"></span>
                         </a>

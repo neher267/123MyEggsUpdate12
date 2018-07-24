@@ -6,7 +6,7 @@
 		<div class="forms">
 			<div class="form-grids widget-shadow" data-example-id="basic-forms"> 
 				<div class="col-md-12">
-					<a href="{{route('product.packages', $product_id)}}" class="btn btn-default">back</a>
+					<a href="{{route('product.packages', $product)}}" class="btn btn-default"><i class="fas fa-arrow-circle-left green-btn"></i>Back</a>
 					@include('common.flash-message')
 					<hr>
 					<p style="text-align: center; font-size: 22px;">{{$title}}</p>
@@ -14,7 +14,7 @@
 				</div>
 				
 				<div class="form-body">
-					<form action="{{route('product-packages.update', $package)}}" method="post">
+					<form action="{{route('product.packages.update', [$product, $package])}}" method="post">
 					{{ csrf_field() }}
 					{{ method_field("PUT") }}
 
@@ -35,4 +35,11 @@
 		</div>
 	</div>
 </div>
+
+<script>
+	CKEDITOR.replace( 'description', {
+    language: 'en',
+});
+</script>
+
 @endsection
