@@ -15,9 +15,10 @@
 					<table class="table table-striped table-bordered datatable" cellspacing="0" width="100%">
 						<thead>
 				            <tr>
-								<th>id</th>
+								<th style="width: 42px">Sr.No</th>
 								<th>Name</th>
 								<th>Weight</th>
+								<th>Users</th>
 								<th>Actions</th>
 				            </tr>
 						</thead>
@@ -28,8 +29,10 @@
 								<td>{{++$i}}</td>
 								<td>{{$role->name}}</td>
 								<td>{{$role->weight}}</td>
+								<td>{{$role->users()->get()->count()}}</td>
 								<td>
 									<a href="{{route('roles.edit', $role)}}" class="btn btn-default">Edit</a>
+									<a href="{{route('role.users', $role)}}" class="btn btn-default">Users</a>
 
 									<form action="{{route('roles.destroy', $role)}}" method="POST" style="display: inline;">
 										{{ csrf_field() }}

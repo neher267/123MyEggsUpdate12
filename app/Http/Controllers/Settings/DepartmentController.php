@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Settings;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Settings\Department;
+use App\Models\Hr\Product;
 
 class DepartmentController extends Controller
 {
@@ -17,6 +18,13 @@ class DepartmentController extends Controller
     {
         $departments = Department::orderBy('name', 'asc')->get();
          return view('backend.settings.department.index', compact('departments'));
+    }
+
+    public function categories(Department $department)
+    {
+        $categories = $department->categories()->get();
+        $title = $department->name.": All Categories";
+        return view('backend.settings.category.index', compact('categories', 'title'));
     }
 
     /**
@@ -37,11 +45,13 @@ class DepartmentController extends Controller
      */
     public function store(Request $request)
     {
-         $department = new Department;
-         $department->name = $request->name; 
-         $department->slug = strtolower(str_replace(' ', '_', $request->name));      
-         $department->save();
-         return redirect()->back()->withSuccess('Create Success!');
+        $name = trim(preg_replace('/\s\s+/', ' ', $request->name));
+        
+        $department = new Department;
+        $department->name = $name;
+        $department->slug = strtolower(str_replace(' ', '-', $name));
+        $department->save();
+        return back()->withSuccess('Create Success!');
     }
 
     /**
@@ -50,7 +60,7 @@ class DepartmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Department $department)
     {
         //
     }
@@ -61,9 +71,10 @@ class DepartmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Department $department)
     {
-        //
+        $title = $department->name. ': Edit';
+        return view('backend.settings.department.edit', compact('department', 'title'));
     }
 
     /**
@@ -73,9 +84,12 @@ class DepartmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Department $department)
     {
-        //
+        $department->name = trim(preg_replace('/\s\s+/', ' ', $request->name));
+        $department->save();
+
+        return redirect('departments')->withSuccess('Update Success!');
     }
 
     /**
@@ -84,8 +98,9 @@ class DepartmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Department $department)
     {
-        //
+        $department->delete();
+        return back()->withSuccess('Deleted Success!');
     }
 }

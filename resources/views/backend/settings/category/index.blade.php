@@ -5,7 +5,8 @@
 	<div class="panel panel-widget forms-panel">
 		<div class="forms">
 			<div class="row">
-				<div class="col-md-12">					
+				<div class="col-md-12">		
+					<a href="{{route('departments.index')}}" class="btn btn-default"><i class="fas fa-arrow-circle-left green-btn"></i>Back</a>			
 					<a href="{{route('categories.create')}}" class="btn btn-default"><i class="fas fa-plus-circle green-btn"></i>New Category</a>
 					@include('common.flash-message')
 					<hr>
@@ -19,6 +20,7 @@
 								<th>Name</th>
 								<th>Department</th>
 								<th>Branch</th>
+								<th>Products</th>								
 								<th>Actions</th>
 				            </tr>
 						</thead>
@@ -37,16 +39,18 @@
 									echo $category->branch_id == null ? 'All Branches' : $category->branch()->first()->name;
 									?>
 								</td>
+								<td>{{$category->products()->count()}}</td>								
 								<td>
 									<a href="{{route('categories.edit', $category)}}" class="btn btn-default">Edit</a>
 
 									<a href="{{route('category.images.index', $category)}}" class="btn btn-default">Images</a>
+									<a href="{{route('category.products', $category)}}" class="btn btn-default">Products</a>
 
 									<form action="{{route('categories.destroy', $category)}}" method="POST" style="display: inline;">
 										{{ csrf_field() }}
 										{{ method_field('DELETE') }}
 
-										<button type="submit" class="btn btn-danger">Delete</button>
+										<button type="submit" class="btn btn-danger" onclick="return alertUser('delete it?')">Delete</button>
 									</form>
 								</td>
 						    </tr>

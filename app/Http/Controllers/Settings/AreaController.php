@@ -17,7 +17,14 @@ class AreaController extends Controller
     public function index()
     {
         $areas = Area::orderBy('name', 'asc')->get();
-         return view('backend.settings.area.index', compact('areas'));
+        return view('backend.settings.area.index', compact('areas'));
+    }
+
+    public function branches(Area $area)
+    {
+        $branches = $area->branches()->get();
+        $title = $area->name. ": All Branches";
+        return view('backend.settings.branch.index', compact('branches', 'title'));
     }
 
     /**
@@ -28,7 +35,7 @@ class AreaController extends Controller
     public function create()
     {
         $districts = District::orderBy('name', 'asc')->get();
-         return view('backend.settings.area.create', compact('districts'));
+        return view('backend.settings.area.create', compact('districts'));
     }
 
     /**
@@ -39,12 +46,14 @@ class AreaController extends Controller
      */
     public function store(Request $request)
     {
+        $name = trim(preg_replace('/\s\s+/', ' ', $request->name));
+        
         $area = new Area;
-        $area->name = $request->name;
-        $area->slug = strtolower(str_replace(' ', '_', $request->name));
+        $area->name = $name;
+        $area->slug = strtolower(str_replace(' ', '-', $name));
         $area->district()->associate($request->district_id);
         $area->save();
-        return redirect()->back()->withSuccess('Create Success!');
+        return back()->withSuccess('Create Success!');
     }
 
     /**
@@ -53,7 +62,7 @@ class AreaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Area $area)
     {
         //
     }
@@ -64,9 +73,10 @@ class AreaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Area $area)
     {
-        //
+        $districts = District::orderBy('name', 'asc')->get();
+        return view('backend.settings.area.edit', compact('districts', 'area'));
     }
 
     /**
@@ -76,9 +86,12 @@ class AreaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Area $area)
     {
-        //
+        $area->name = trim(preg_replace('/\s\s+/', ' ', $request->name));
+        $area->district()->associate($request->district_id);
+        $area->save();
+        return redirect('areas')->withSuccess('Create Success!');
     }
 
     /**
@@ -87,8 +100,9 @@ class AreaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Area $area)
     {
-        //
+        $area->delete();
+        return back()->withSuccess('Deleted Success!');
     }
 }

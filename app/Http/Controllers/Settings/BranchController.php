@@ -18,7 +18,8 @@ class BranchController extends Controller
     public function index()
     {
         $branches = Branch::orderBy('name', 'asc')->get();
-         return view('backend.settings.branch.index', compact('branches'));
+        $title = "All Branches";
+        return view('backend.settings.branch.index', compact('branches', 'title'));
     }
 
     /**
@@ -40,16 +41,15 @@ class BranchController extends Controller
      */
     public function store(Request $request)
     {
-        //dd($request->all())
-        $address = Address::create($request->all());
-
+        $name = trim(preg_replace('/\s\s+/', ' ', $request->name));
+        
         $branch = new Branch;
-        $branch->name = $request->name;
-        $branch->slug = strtolower(str_replace(' ', '_', $request->name));
-        $branch->address()->associate($address);
+        $branch->name = $name;
+        $branch->slug = strtolower(str_replace(' ', '-', $name));        
+        $branch->area()->associate($request->area_id);
         $branch->save();
 
-        return redirect()->back()->withSuccess('Create Success!');
+        return back()->withSuccess('Create Success!');
     }
 
     /**
@@ -58,7 +58,7 @@ class BranchController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Branch $branch)
     {
         //
     }
@@ -69,9 +69,11 @@ class BranchController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Branch $branch)
     {
-        //
+        $title = $branch->name. ": Edit";
+        $areas = Area::orderBy('name', 'asc')->get();
+        return view('backend.settings.branch.edit', compact('areas', 'title', 'branch'));
     }
 
     /**
@@ -81,9 +83,13 @@ class BranchController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Branch $branch)
     {
-        //
+        $branch->name = trim(preg_replace('/\s\s+/', ' ', $request->name));
+        $branch->area()->associate($request->area_id);
+        $branch->save();
+
+        return redirect('branches')->withSuccess('Create Success!');
     }
 
     /**
@@ -92,7 +98,7 @@ class BranchController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Branch $branch)
     {
         //
     }

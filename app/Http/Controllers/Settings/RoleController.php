@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Settings;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Cartalyst\Sentinel\Roles\EloquentRole as Role;
+use Cartalyst\Sentinel\Users\EloquentUser as User;
 
 class RoleController extends Controller
 {
@@ -17,6 +18,13 @@ class RoleController extends Controller
     {
         $roles = Role::orderBy('weight', 'desc')->get();
         return view('backend.settings.role.index', compact('roles'));
+    }
+
+    public function users(Role $role)
+    {
+        $title = $role->name.': All Users';
+        $users = $role->users()->get();
+        return view('backend.hr.user.index', compact('users', 'title', 'role'));
     }
 
     /**
@@ -40,12 +48,14 @@ class RoleController extends Controller
     	$data = $request->validate([
     		'name' => 'required|string | min:3 | max:50',        
     	]);
+
+        $name = trim(preg_replace('/\s\s+/', ' ', $request->name));
         
-         $role = new Role;
-         $role->name = $request->name; 
-         $role->slug = strtolower(str_replace(' ', '_', $request->name)); 
-         $role->weight = $request->weight;   
-         $role->save();
+        $role = new Role;
+        $role->name = $name;
+        $role->slug = strtolower(str_replace(' ', '-', $name));
+        $role->weight = $request->weight;   
+        $role->save();
          
          return back()->withSuccess('Success');
     }
@@ -56,7 +66,7 @@ class RoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Role $role)
     {
         //
     }
@@ -67,9 +77,8 @@ class RoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Role $role)
     {
-        $role = Role::find($id);
         $title = 'Edit Role: '.$role->name;
         return view('backend.settings.role.edit', compact('role', 'title'));
     }
@@ -81,11 +90,9 @@ class RoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Role $role)
     {
-        $role = Role::find($id);
-        $role->name = $request->name; 
-        $role->slug = strtolower(str_replace(' ', '_', $request->name)); 
+        $role->name = trim(preg_replace('/\s\s+/', ' ', $request->name)); 
         $role->weight = $request->weight;   
         $role->save();
 
@@ -98,8 +105,9 @@ class RoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Role $role)
     {
-        //
+        $role->delete();
+        return back()->withSuccess('Deleted Success!');
     }
 }

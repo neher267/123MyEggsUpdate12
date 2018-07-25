@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Settings;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Settings\Area;
 use App\Models\Settings\District;
 
 class DistrictController extends Controller
@@ -15,8 +16,14 @@ class DistrictController extends Controller
      */
     public function index()
     {
-        $districts = District::orderBy('name', 'asc')->get();
-         return view('backend.settings.district.index', compact('districts'));
+        $districts = District::latest()->get();
+        return view('backend.settings.district.index', compact('districts'));
+    }
+
+    public function areas()
+    {
+        $areas = Area::orderBy('name', 'asc')->get();
+        return view('backend.settings.area.index', compact('areas'));
     }
 
     /**
@@ -37,10 +44,13 @@ class DistrictController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->all();
-        $data['slug'] = strtolower(str_replace(' ', '_', $request->name));
-        District::create($data);
-        return redirect()->back()->withSuccess('Create Success!');
+        $name = trim(preg_replace('/\s\s+/', ' ', $request->name));
+        
+        $district = new District;
+        $district->name = $name;
+        $district->slug = strtolower(str_replace(' ', '-', $name));
+        $district->save();
+        return back()->withSuccess('Create Success!');
     }
 
     /**
@@ -49,7 +59,7 @@ class DistrictController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(District $district)
     {
         //
     }
@@ -60,9 +70,9 @@ class DistrictController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(District $district)
     {
-        //
+        return view('backend.settings.district.edit', compact('district'));
     }
 
     /**
@@ -72,9 +82,11 @@ class DistrictController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, District $district)
     {
-        //
+        $district->name = trim(preg_replace('/\s\s+/', ' ', $request->name));
+        $district->save();
+        return redirect('districts')->withSuccess('Update Success!');
     }
 
     /**
@@ -83,8 +95,9 @@ class DistrictController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(District $district)
     {
-        //
+        $district->delete();
+        return back()->withSuccess('Deleted Success!');
     }
 }

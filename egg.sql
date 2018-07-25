@@ -38,7 +38,7 @@ INSERT INTO `activations` (`id`, `user_id`, `code`, `completed`, `completed_at`,
 -- Dumping structure for table fresh.addresses
 CREATE TABLE IF NOT EXISTS `addresses` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `area_id` int(10) unsigned NOT NULL,
+  `branch_id` int(10) unsigned NOT NULL,
   `block` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `road_no` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `house_no` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS `addresses` (
 
 -- Dumping data for table fresh.addresses: ~2 rows (approximately)
 /*!40000 ALTER TABLE `addresses` DISABLE KEYS */;
-INSERT INTO `addresses` (`id`, `area_id`, `block`, `road_no`, `house_no`, `house_name`, `floor`, `created_at`, `updated_at`) VALUES
+INSERT INTO `addresses` (`id`, `branch_id`, `block`, `road_no`, `house_no`, `house_name`, `floor`, `created_at`, `updated_at`) VALUES
 	(1, 1, 'b', '11', NULL, NULL, NULL, '2018-03-06 09:21:58', '2018-03-06 09:21:58'),
 	(2, 3, 'A', '12', '233', 'White House', 'G', '2018-03-06 09:47:49', '2018-03-06 09:47:49');
 /*!40000 ALTER TABLE `addresses` ENABLE KEYS */;
@@ -68,18 +68,18 @@ CREATE TABLE IF NOT EXISTS `areas` (
   UNIQUE KEY `areas_slug_unique` (`slug`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table fresh.areas: ~3 rows (approximately)
+-- Dumping data for table fresh.areas: ~2 rows (approximately)
 /*!40000 ALTER TABLE `areas` DISABLE KEYS */;
 INSERT INTO `areas` (`id`, `district_id`, `name`, `slug`, `created_at`, `updated_at`) VALUES
-	(1, 1, 'Dhanmondi', 'dhanmondi', '2018-03-06 09:18:15', '2018-03-06 09:18:15'),
-	(2, 1, 'Mirpur', 'mirpur', '2018-03-06 09:45:54', '2018-03-06 09:45:54'),
+	(1, 1, 'Dhanmondi', 'dhanmondi', '2018-03-06 09:18:15', '2018-07-25 06:00:18'),
 	(3, 1, 'Mirpur DOSH', 'mirpur_dosh', '2018-03-06 09:46:57', '2018-03-06 09:46:57');
 /*!40000 ALTER TABLE `areas` ENABLE KEYS */;
 
 -- Dumping structure for table fresh.branches
 CREATE TABLE IF NOT EXISTS `branches` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `address_id` int(10) unsigned NOT NULL,
+  `area_id` int(10) unsigned NOT NULL,
+  `address_id` int(10) unsigned DEFAULT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `slug` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
@@ -87,13 +87,14 @@ CREATE TABLE IF NOT EXISTS `branches` (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `branches_slug_unique` (`slug`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dumping data for table fresh.branches: ~2 rows (approximately)
 /*!40000 ALTER TABLE `branches` DISABLE KEYS */;
-INSERT INTO `branches` (`id`, `address_id`, `name`, `slug`, `deleted_at`, `created_at`, `updated_at`) VALUES
-	(1, 1, 'Main', 'main', NULL, '2018-03-06 09:21:58', '2018-03-06 09:21:58'),
-	(2, 2, 'Mirpur', 'mirpur', NULL, '2018-03-06 09:47:49', '2018-03-06 09:47:49');
+INSERT INTO `branches` (`id`, `area_id`, `address_id`, `name`, `slug`, `deleted_at`, `created_at`, `updated_at`) VALUES
+	(1, 1, 1, 'Main', 'main', NULL, '2018-03-06 09:21:58', '2018-07-25 07:12:53'),
+	(2, 3, 2, 'Mirpur', 'mirpur', NULL, '2018-03-06 09:47:49', '2018-03-06 09:47:49'),
+	(3, 1, NULL, 'Sukrabad', 'sukrabad', NULL, '2018-07-25 08:56:46', '2018-07-25 08:56:46');
 /*!40000 ALTER TABLE `branches` ENABLE KEYS */;
 
 -- Dumping structure for table fresh.categories
@@ -114,10 +115,9 @@ CREATE TABLE IF NOT EXISTS `categories` (
 /*!40000 ALTER TABLE `categories` DISABLE KEYS */;
 INSERT INTO `categories` (`id`, `branch_id`, `department_id`, `name`, `slug`, `thumbnail`, `created_at`, `updated_at`) VALUES
 	(1, NULL, 1, 'Rice', 'rice', 'images/Category/1524585917.jpg', '2018-04-24 08:20:15', '2018-04-24 16:06:01'),
-	(2, NULL, 1, 'Eggs', 'eggs', 'images/Category/1524804382.jpg', '2018-04-24 16:07:39', '2018-04-27 04:46:37'),
+	(2, NULL, 1, 'Egg', 'eggs', 'images/Category/1524804382.jpg', '2018-04-24 16:07:39', '2018-07-25 05:30:06'),
 	(3, NULL, 1, 'Oil', 'oil', 'images/Category/1524586327.jpg', '2018-04-24 16:10:24', '2018-04-24 16:12:19'),
 	(4, NULL, 1, 'Potato', 'potato', 'images/Category/1524586610.jpg', '2018-04-24 16:16:50', '2018-04-24 16:16:50'),
-	(6, NULL, 1, 'Potato', 'potato2', 'images/Category/1524586610.jpg', '2018-04-24 16:16:50', '2018-04-24 16:16:50'),
 	(7, NULL, 1, 'Grocery Mix', 'grocery-mix', 'images/Category/1532323751.jpg', '2018-07-23 05:29:11', '2018-07-23 05:29:11');
 /*!40000 ALTER TABLE `categories` ENABLE KEYS */;
 
@@ -131,13 +131,13 @@ CREATE TABLE IF NOT EXISTS `departments` (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `departments_slug_unique` (`slug`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dumping data for table fresh.departments: ~2 rows (approximately)
 /*!40000 ALTER TABLE `departments` DISABLE KEYS */;
 INSERT INTO `departments` (`id`, `branch_id`, `name`, `slug`, `created_at`, `updated_at`) VALUES
 	(1, NULL, 'Grochary', 'grochary', '2018-03-06 09:19:22', '2018-03-06 09:19:22'),
-	(2, NULL, 'Asset', 'asset', '2018-03-06 09:20:16', '2018-03-06 09:20:16');
+	(3, NULL, 'Asset', 'asset', '2018-07-25 10:23:44', '2018-07-25 10:23:44');
 /*!40000 ALTER TABLE `departments` ENABLE KEYS */;
 
 -- Dumping structure for table fresh.districts
@@ -149,12 +149,13 @@ CREATE TABLE IF NOT EXISTS `districts` (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `districts_slug_unique` (`slug`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table fresh.districts: ~0 rows (approximately)
+-- Dumping data for table fresh.districts: ~2 rows (approximately)
 /*!40000 ALTER TABLE `districts` DISABLE KEYS */;
 INSERT INTO `districts` (`id`, `name`, `slug`, `created_at`, `updated_at`) VALUES
-	(1, 'Dhaka', 'dhaka', '2018-03-06 09:15:50', '2018-03-06 09:15:50');
+	(1, 'Dhaka', 'dhaka', '2018-03-06 09:15:50', '2018-07-25 06:22:29'),
+	(3, 'Barisal', 'barisal', '2018-07-25 06:25:17', '2018-07-25 06:25:17');
 /*!40000 ALTER TABLE `districts` ENABLE KEYS */;
 
 -- Dumping structure for table fresh.expenses
@@ -215,7 +216,7 @@ CREATE TABLE IF NOT EXISTS `images` (
   UNIQUE KEY `images_src_unique` (`src`)
 ) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table fresh.images: ~31 rows (approximately)
+-- Dumping data for table fresh.images: ~35 rows (approximately)
 /*!40000 ALTER TABLE `images` DISABLE KEYS */;
 INSERT INTO `images` (`id`, `imageable_id`, `imageable_type`, `type`, `status`, `src`, `created_at`, `updated_at`) VALUES
 	(2, 1, 'category', 'Thumbnail', 1, 'images/Category/1524564481.png', '2018-04-24 10:08:01', '2018-04-24 10:08:01'),
@@ -322,7 +323,7 @@ CREATE TABLE IF NOT EXISTS `packages` (
   UNIQUE KEY `packages_slug_unique` (`slug`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table fresh.packages: ~3 rows (approximately)
+-- Dumping data for table fresh.packages: ~5 rows (approximately)
 /*!40000 ALTER TABLE `packages` DISABLE KEYS */;
 INSERT INTO `packages` (`id`, `slug`, `packageable_id`, `packageable_type`, `title`, `description`, `status`, `hit_count`, `thumbnail`, `created_at`, `updated_at`) VALUES
 	(1, '1234611541', 6, 'product', 'ব্যাচেলর জিন্দাবাদ', '২৫ পিস লেয়ার ডিম\r\nদাম মাত্র ১০০ টাকা\r\nসাথে আছে ৫ পয়েন্ট বোনাস \r\nসাথে থাকুন সবসময়।', 1, 50, 'images/ProductPackages/1531291779.jpg', '2018-07-11 06:49:39', '2018-07-11 06:49:39'),
@@ -353,13 +354,14 @@ CREATE TABLE IF NOT EXISTS `persistences` (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `persistences_code_unique` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table fresh.persistences: ~2 rows (approximately)
+-- Dumping data for table fresh.persistences: ~3 rows (approximately)
 /*!40000 ALTER TABLE `persistences` DISABLE KEYS */;
 INSERT INTO `persistences` (`id`, `user_id`, `code`, `created_at`, `updated_at`) VALUES
 	(1, 1, 'VHsNZW51LDbUG9x06MvpadRPGl7VxE82', '2018-03-07 07:25:36', '2018-03-07 07:25:36'),
-	(2, 1, 'zNNSkEBDehi9HrenrS4nZRMdNhGVjGKj', '2018-03-07 08:13:04', '2018-03-07 08:13:04');
+	(2, 1, 'zNNSkEBDehi9HrenrS4nZRMdNhGVjGKj', '2018-03-07 08:13:04', '2018-03-07 08:13:04'),
+	(12, 3, '0vbHpXEUEsiiSF1nuUuUboEoLApjRgXg', '2018-07-25 09:58:10', '2018-07-25 09:58:10');
 /*!40000 ALTER TABLE `persistences` ENABLE KEYS */;
 
 -- Dumping structure for table fresh.prices
@@ -393,16 +395,16 @@ CREATE TABLE IF NOT EXISTS `products` (
   UNIQUE KEY `products_name_unique` (`name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table fresh.products: ~6 rows (approximately)
+-- Dumping data for table fresh.products: ~7 rows (approximately)
 /*!40000 ALTER TABLE `products` DISABLE KEYS */;
 INSERT INTO `products` (`id`, `category_id`, `branch_id`, `name`, `slug`, `unit`, `for_sale`, `thumbnail`, `created_at`, `updated_at`) VALUES
 	(1, 3, NULL, 'সরিষার তেল', 'সরিষার-তেল', 'KG', 1, 'images/products/1524758191.jpg', '2018-04-26 15:56:31', '2018-04-26 15:56:31'),
 	(2, 3, NULL, 'সয়াবিন তেল', 'সয়াবিন-তেল', 'L', 1, 'images/products/1524758697.jpg', '2018-04-26 16:04:57', '2018-04-26 16:04:57'),
-	(3, 4, NULL, 'মিষ্টি আলু (লাল)', 'মিষ্টি-আলু-(লাল)', 'KG', 1, 'images/products/1524758833.jpg', '2018-04-26 16:07:13', '2018-04-26 16:07:13'),
-	(4, 4, NULL, 'মিষ্টি আলু (সাদা)', 'মিষ্টি-আলু-(সাদা)', 'KG', 1, 'images/products/1524758967.jpg', '2018-04-26 16:09:27', '2018-04-26 16:09:27'),
+	(3, 4, NULL, 'মিষ্টি আলু (লাল)', 'মিষ্টি-আলু-লাল', 'KG', 1, 'images/products/1524758833.jpg', '2018-04-26 16:07:13', '2018-04-26 16:07:13'),
+	(4, 4, NULL, 'মিষ্টি আলু (সাদা)', 'মিষ্টি-আলু-সাদা', 'KG', 1, 'images/products/1524758967.jpg', '2018-04-26 16:09:27', '2018-04-26 16:09:27'),
 	(5, 2, NULL, 'হাঁসের ডিম', 'হাঁসের-ডিম', 'PCS', 1, 'images/products/1524804330.jpg', '2018-04-27 04:45:30', '2018-07-12 10:07:46'),
 	(6, 2, NULL, 'লেয়ার ডিম', 'লেয়ার-ডিম', 'PCS', 1, 'images/products/1524804832.jpg', '2018-04-27 04:50:10', '2018-04-27 04:50:10'),
-	(7, 7, NULL, 'ডিম + তেল', 'ডিম-+-তেল', 'PCS', 1, 'images/products/1532324350.jpg', '2018-07-23 05:39:10', '2018-07-23 05:39:10');
+	(7, 7, NULL, 'ডিম + তেল', 'ডিম+তেল', 'PCS', 1, 'images/products/1532324350.jpg', '2018-07-23 05:39:10', '2018-07-23 05:39:10');
 /*!40000 ALTER TABLE `products` ENABLE KEYS */;
 
 -- Dumping structure for table fresh.purchases
@@ -463,12 +465,10 @@ CREATE TABLE IF NOT EXISTS `roles` (
 /*!40000 ALTER TABLE `roles` DISABLE KEYS */;
 INSERT INTO `roles` (`id`, `slug`, `name`, `weight`, `permissions`, `created_at`, `updated_at`) VALUES
 	(1, 'admin', 'Admin', 100, NULL, '2018-03-06 10:17:22', '2018-04-18 15:10:52'),
-	(2, 'marchant', 'Marchant', 30, NULL, '2018-03-08 06:01:26', '2018-04-20 06:34:04'),
 	(3, 'buyer', 'Buyer', 50, NULL, '2018-03-08 06:31:53', '2018-05-15 06:07:35'),
 	(4, 'customer', 'Customer', 999, NULL, '2018-03-09 05:49:31', '2018-04-20 06:33:20'),
 	(5, 'managing_director', 'Managing Director', 150, NULL, '2018-03-09 05:49:44', '2018-05-15 06:01:20'),
 	(6, 'delevery_boy', 'Delevery boy', 55, NULL, '2018-03-09 05:49:59', '2018-05-15 06:09:44'),
-	(7, 'director', 'Director', 110, NULL, '2018-04-18 15:19:19', '2018-05-15 06:01:53'),
 	(8, 'manager', 'Manager', 80, NULL, '2018-05-15 06:02:37', '2018-05-15 06:02:37');
 /*!40000 ALTER TABLE `roles` ENABLE KEYS */;
 
@@ -485,10 +485,8 @@ CREATE TABLE IF NOT EXISTS `role_users` (
 /*!40000 ALTER TABLE `role_users` DISABLE KEYS */;
 INSERT INTO `role_users` (`user_id`, `role_id`, `created_at`, `updated_at`) VALUES
 	(3, 1, '2018-03-08 05:56:22', '2018-03-08 05:56:22'),
-	(4, 2, '2018-03-08 06:32:39', '2018-03-08 06:32:39'),
 	(5, 1, '2018-03-09 07:13:22', '2018-03-09 07:13:22'),
 	(6, 3, '2018-03-10 11:36:28', '2018-03-10 11:36:28'),
-	(7, 2, '2018-04-20 15:18:35', '2018-04-20 15:18:35'),
 	(8, 8, '2018-05-15 06:11:29', '2018-05-15 06:11:29');
 /*!40000 ALTER TABLE `role_users` ENABLE KEYS */;
 
@@ -585,7 +583,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 -- Dumping data for table fresh.users: ~6 rows (approximately)
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
 INSERT INTO `users` (`id`, `branch_id`, `mobile`, `name`, `points`, `password`, `permissions`, `last_login`, `created_at`, `updated_at`) VALUES
-	(3, 1, '01784255196', 'Admin', 100, '$2y$10$ooXlQwxjbZVVqoO5ncmTU.Q0TTpl8Kt69U4qSZLWArLyEsPldk.y6', NULL, '2018-07-23 05:02:58', '2018-03-08 05:56:21', '2018-07-23 05:02:58'),
+	(3, 1, '01784255196', 'Admin', 100, '$2y$10$ooXlQwxjbZVVqoO5ncmTU.Q0TTpl8Kt69U4qSZLWArLyEsPldk.y6', NULL, '2018-07-25 09:58:10', '2018-03-08 05:56:21', '2018-07-25 09:58:10'),
 	(4, 1, '01784255111', 'Marchant', 0, '$2y$10$M2nCkps8ougSXwubhZYMIuPZ8Y13JztyaBfIwD80/0SLLtb7Qu10e', NULL, NULL, '2018-03-08 06:32:39', '2018-03-08 06:32:39'),
 	(5, 1, '01765768609', 'Admin', 0, '$2y$10$krIXbjHasYkPtwVINVhMAOmFRDv3F4t9wy2qy4pXAUuZOZssNH1fG', NULL, '2018-05-15 05:50:17', '2018-03-09 07:13:22', '2018-05-15 05:50:17'),
 	(6, 1, '01784255199', 'Buyer', 0, '$2y$10$Md4XMRqfJ3DfbPOBi3hSf.P8t0MHbVLjEIg7CGFAwb5v48b2ci0u6', NULL, '2018-05-15 05:50:32', '2018-03-10 11:36:28', '2018-05-15 05:50:32'),

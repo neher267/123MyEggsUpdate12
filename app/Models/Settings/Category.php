@@ -10,6 +10,7 @@ use App\Image;
 
 class Category extends Model
 {
+    
     public function images()
     {
         return $this->morphMany(Image::class, 'imageable');

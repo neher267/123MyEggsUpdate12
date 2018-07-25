@@ -6,7 +6,6 @@
 		<div class="forms">
 			<div class="row">				
 				<div class="col-md-12">
-					<a href="{{route('areas.index')}}" class="btn btn-default"><i class="fas fa-arrow-circle-left green-btn"></i>Back</a>
 					<a href="{{route('branches.create')}}" class="btn btn-default"><i class="fas fa-plus-circle green-btn"></i>New Branch</a>
 					@include('common.flash-message')
 					<hr>
@@ -42,15 +41,14 @@
 										echo $address->road_no != null ? ', Road No: '.$address->road_no: '';
 										echo $address->block != null ? ', Block: '.$address->block.', ': '';
 										echo $branch->area()->first()->name;
-									}									
+									}
+									
 								?>
 								</td>
 								<td>
 									<a href="{{route('branches.edit', $branch)}}" class="btn btn-default" style="margin-top: 3px">Edit Area</a>
 									@if(!empty($branch->address_id))									
-									<a href="{{route('branch.address.edit', $branch)}}" class="btn btn-default" style="margin-top: 3px">Edit Address</a>
-									@else 
-									<a href="{{route('branch.address.create', $branch)}}" class="btn btn-default" style="margin-top: 3px">Add Address</a>
+									<a href="{{route('branches.edit', $branch->address->first())}}" class="btn btn-default" style="margin-top: 3px">Edit Address</a>
 									@endif 
 								</td>
 						    </tr>

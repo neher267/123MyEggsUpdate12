@@ -49,9 +49,16 @@ Route::group(['middleware'=>['sentinel.auth','buyer']], function(){
 
 Route::group(['namespace'=>'Settings', 'middleware'=>['sentinel.auth']], function(){
 	Route::resource('areas','AreaController');
+	Route::get('areas/{area}/branches', 'AreaController@branches')->name('area.branches');
+	//branch
 	Route::resource('branches','BranchController');
+	Route::get('branches/{branch}/address/create', 'BranchAddressController@create')->name('branch.address.create');
+	Route::post('branches/{branch}/address', 'BranchAddressController@store')->name('branch.address.store');
+	Route::get('branches/{branch}/address/edit', 'BranchAddressController@edit')->name('branch.address.edit');
+	Route::put('branches/{branch}/address/update', 'BranchAddressController@update')->name('branch.address.update');
+	//end branch
 	Route::resource('categories','CategoryController');
-
+	Route::get('category/{category}/products', 'CategoryController@products')->name('category.products');
 	//category image
 	Route::get('categories/{category}/images', 'CategoryImageController@index')->name('category.images.index');
 	Route::post('categories/{category}/images', 'CategoryImageController@store')->name('category.images.store');
@@ -69,8 +76,11 @@ Route::group(['namespace'=>'Settings', 'middleware'=>['sentinel.auth']], functio
 	//end category image
 
 	Route::resource('departments','DepartmentController');
+	Route::get('departments/{department}/categories', 'DepartmentController@categories')->name('department.categories');
 	Route::resource('districts','DistrictController');
+	Route::get('districts/{district}/areas', 'DistrictController@areas')->name('district.areas');
 	Route::resource('roles','RoleController');
+	Route::get('roles/{role}/users', 'RoleController@users')->name('role.users');
 	Route::resource('gifts','GiftController');
 
 	// gift image

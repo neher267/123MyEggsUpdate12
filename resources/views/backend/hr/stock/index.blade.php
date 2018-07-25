@@ -10,7 +10,6 @@
 					<a href="{{url('')}}" class="btn btn-default">back</a>			
 					<a href="{{route('stock.create')}}" class="btn btn-default">Manage Stock</a>					
 					<a href="{{route('products.index')}}" class="btn btn-default">Products</a>
-					<a href="{{route('mix-packages.index')}}" class="btn btn-default">Mix Packages</a>
 					<hr>
 				</div>
 				<div class="col-md-12"  style="text-align: center;">

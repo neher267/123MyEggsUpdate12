@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Settings\Category;
 use App\Models\Settings\Department;
+use App\Models\Hr\Product;
 use App\Image;
 
 class CategoryController extends Controller
@@ -18,8 +19,15 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::orderBy('name', 'asc')->get();
+        $categories = Category::latest()->get();
         return view('backend.settings.category.index', compact('categories'));
+    }
+
+    public function products(Category $category)
+    {
+        $products = $category->products()->get();
+        $title = $category->name.": All Products";
+        return view('backend.hr.product.index', compact('products', 'title'));
     }
 
     /**
@@ -42,8 +50,11 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $imageName = time().'.'.$request->src->getClientOriginalExtension();
-
+        $name = trim(preg_replace('/\s\s+/', ' ', $request->name));
+        
         $category = new Category;
+        $category->name = $name;
+        $category->slug = strtolower(str_replace(' ', '-', $name));
         $category->name = $request->name; 
         $category->slug = strtolower(str_replace(' ', '-', $request->name));
         $category->department()->associate($request->department_id);    
@@ -56,7 +67,7 @@ class CategoryController extends Controller
         $image->src = $this->path.'/'.$imageName;
         $category->images()->save($image); 
         
-        return redirect()->back()->withSuccess('Create Success!');
+        return back()->withSuccess('Create Success!');
     }
 
     /**
@@ -76,9 +87,11 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Category $category)
     {
-        //
+        $title = $category->name.': Edit';
+        $departments = Department::orderBy('name', 'asc')->get();
+        return view('backend.settings.category.edit', compact('departments', 'category', 'title'));
     }
 
     /**
@@ -88,9 +101,13 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Category $category)
     {
-        //
+        $category->name = trim(preg_replace('/\s\s+/', ' ', $request->name)); 
+        $category->department()->associate($request->department_id);    
+        $category->save();
+        
+        return redirect('categories')->withSuccess('Update Success!');
     }
 
     /**
@@ -99,8 +116,15 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Category $category)
     {
-        //
+        $category->images()->each(function ($item, $key) {
+            unlink($item->src);
+            $item->delete();
+        });
+
+        $category->delete();
+
+        return redirect('categories')->withSuccess('Deleted Success!');
     }
 }
