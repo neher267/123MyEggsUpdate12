@@ -145,4 +145,8 @@ id 	user_id 	title 		amount 	 fine 	short_description  date 			approve_by
 # manager er kache purchase repprt korbe
 # manager stock update korbe
 
+
+transactions:
+id transactionable_id	transactionable_type 	transaction_type(debit||credit) 	amount	date 	created_at 	updated_at 
+
 							
